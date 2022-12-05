@@ -1,7 +1,7 @@
 FROM python:3.9-slim
 LABEL manteiner="juanvaes22@gmail.com"
 
-ARG DEV
+ARG DEV=false
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE 1
