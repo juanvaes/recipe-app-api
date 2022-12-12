@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "recipe_api"
+name = "recipes"
 version = "0.1.0"
 description = ""
 authors = ["Juan Valencia"]

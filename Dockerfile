@@ -20,8 +20,12 @@ RUN python3 -m venv $POETRY_VENV \
 
 # Add `poetry` to PATH
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
-COPY . /recipe-app-api
-WORKDIR /recipe-app-api
+
+WORKDIR /usr/src/app
+
+COPY src/recipes /usr/src/app/
+COPY poetry.lock /usr/src/app/
+COPY pyproject.toml /usr/src/app/
 
 RUN if [ "$DEV" = "true" ] ; then \
         echo "installing dev dependencies..." && poetry install; \
