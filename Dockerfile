@@ -8,7 +8,9 @@ ARG DEV=false
 RUN apt-get update && \
     apt-get install -y libpq-dev gcc
 
+# Creates virtualenv
 RUN python -m venv /opt/venv
+# Activates virtualenvironment
 ENV PATH="/opt/venv/bin:$PATH"
 
 
@@ -44,10 +46,11 @@ ENV PATH="/opt/venv/bin:$PATH"
     
 WORKDIR /usr/src/app
 
-COPY src/recipes /usr/src/app/recipes
+COPY recipes /usr/src/app/recipes
 COPY manage.py /usr/src/app/
 COPY poetry.lock /usr/src/app/
 COPY pyproject.toml /usr/src/app/
+COPY core /usr/src/app/core
 
 #RUN adduser \
 #    --disabled-password \
