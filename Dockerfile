@@ -1,40 +1,57 @@
-FROM python:3.9-slim
+# Builder stage
+FROM python:3.9-slim AS builder
 LABEL manteiner="juanvaes22@gmail.com"
-
 ARG DEV=false
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE 1
-# Tells Python to direct output to the console
-ENV PYTHONBUFFERED 1
+# libpq-dev is a very light and minimal package used to interact with a postgresql db
+# gcc a kind of C compiler to install psycopg2
+RUN apt-get update && \
+    apt-get install -y libpq-dev gcc
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 
 # Poetry
-ENV POETRY_VERSION=1.1.8
-ENV POETRY_HOME=/opt/poetry
-ENV POETRY_VENV=/opt/poetry-venv
-ENV POETRY_CACHE_DIR=/opt/.cache
-# Install poetry separated from system interpreter
-RUN python3 -m venv $POETRY_VENV \
-    && $POETRY_VENV/bin/pip install -U pip setuptools \
-    && $POETRY_VENV/bin/pip install poetry==${POETRY_VERSION}
+# ------
+ENV POETRY_VERSION=1.3.2
+RUN pip install poetry==${POETRY_VERSION}
+COPY poetry.lock pyproject.toml .
 
-# Add `poetry` to PATH
-ENV PATH="${PATH}:${POETRY_VENV}/bin"
+RUN if [ "$DEV" = "true" ] ; then \
+        echo "installing dev dependencies..." \
+        && poetry config virtualenvs.create false \
+        && poetry install --no-interaction --no-ansi; \
 
+    else \
+        echo "installing prod dependencies..." \
+        && poetry config virtualenvs.create false \
+        && poetry install --no-dev --no-interaction --no-ansi; \
+    fi
+
+FROM python:3.9-slim
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev
+
+COPY --from=builder /opt/venv /opt/venv
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1 \
+    PYTHONBUFFERED 1
+
+ENV PATH="/opt/venv/bin:$PATH"
+    
 WORKDIR /usr/src/app
 
-COPY src/recipes /usr/src/app/
+COPY src/recipes /usr/src/app/recipes
+COPY manage.py /usr/src/app/
 COPY poetry.lock /usr/src/app/
 COPY pyproject.toml /usr/src/app/
 
-RUN if [ "$DEV" = "true" ] ; then \
-        echo "installing dev dependencies..." && poetry install; \
-    else \
-        echo "installing prod dependencies..." && poetry install --no-dev; \
-    fi
-RUN adduser \
-    --disabled-password \
-    --no-create-home \
-    django-user
+#RUN adduser \
+#    --disabled-password \
+#    --no-create-home \
+#    django-user
 EXPOSE 8000
-USER django-user
+#USER django-user
