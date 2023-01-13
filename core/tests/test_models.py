@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from parameterized import parameterized
 
-
-class TestCoreModels(TestCase):
+class TestUseModel(TestCase):
     """Test core models"""
 
     def test_create_user_with_email_is_successful(self):
@@ -15,3 +15,15 @@ class TestCoreModels(TestCase):
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
+
+    @parameterized.expand([
+        ("test1@EXAMPLE.com", "test1@example.com"),
+        ("test2@Example.com", "test2@example.com"),
+        ("TEST3@EXAMPLE.COM", "TEST3@example.com"),
+        ("test4@example.COM", "test4@example.com"),
+    ])
+    def test_new_user_email_normalized(self, inputed_email, expected):
+        """Test email is normalized for new users"""
+
+        user = get_user_model().objects.create_user(inputed_email, "12345")
+        self.assertEqual(user.email, expected)
