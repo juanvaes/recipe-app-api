@@ -43,7 +43,7 @@ ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONBUFFERED 1
 
 ENV PATH="/opt/venv/bin:$PATH"
-    
+
 WORKDIR /usr/src/app
 
 COPY recipes /usr/src/app/recipes
@@ -51,6 +51,7 @@ COPY manage.py /usr/src/app/
 COPY poetry.lock /usr/src/app/
 COPY pyproject.toml /usr/src/app/
 COPY core /usr/src/app/core
+COPY user /usr/src/app/user
 
 #RUN adduser \
 #    --disabled-password \
