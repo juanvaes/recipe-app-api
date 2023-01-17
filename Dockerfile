@@ -46,12 +46,13 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /usr/src/app
 
-COPY recipes /usr/src/app/recipes
+COPY config /usr/src/app/config
 COPY manage.py /usr/src/app/
 COPY poetry.lock /usr/src/app/
 COPY pyproject.toml /usr/src/app/
 COPY core /usr/src/app/core
 COPY user /usr/src/app/user
+COPY recipe /usr/src/app/recipe
 
 #RUN adduser \
 #    --disabled-password \

@@ -1,4 +1,4 @@
-"""recipes URL Configuration
+"""config URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
@@ -27,5 +28,5 @@ urlpatterns = [
         name="api-docs"
     ),
     path('api/user/', include('user.urls')),
-
+    path('api/recipe/', include('recipe.urls')),
 ]
