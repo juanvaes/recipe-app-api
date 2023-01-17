@@ -13,6 +13,7 @@ python-dotenv = "^0.21.0"
 parameterized = "^0.8.1"
 drf-spectacular = "^0.25.1"
 pillow = "^9.4.0"
+uwsgi = "^2.0.21"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^6.0.0"

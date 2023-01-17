@@ -42,11 +42,12 @@ COPY --from=builder /opt/venv /opt/venv
 ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONBUFFERED 1
 
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/scripts:/opt/venv/bin:$PATH"
 
 WORKDIR /usr/src/app
 
 COPY config /usr/src/app/config
+COPY bin /usr/src/app/bin
 COPY manage.py /usr/src/app/
 COPY poetry.lock /usr/src/app/
 COPY pyproject.toml /usr/src/app/
@@ -64,3 +65,4 @@ RUN mkdir -p /vol/web/media && \
 #    django-user
 EXPOSE 8000
 #USER django-user
+CMD ["run.sh"]
