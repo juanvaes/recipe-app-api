@@ -54,6 +54,10 @@ COPY core /usr/src/app/core
 COPY user /usr/src/app/user
 COPY recipe /usr/src/app/recipe
 
+RUN mkdir -p /vol/web/media && \
+    mkdir -p /vol/web/static && \
+    chmod -R 755 /vol
+
 #RUN adduser \
 #    --disabled-password \
 #    --no-create-home \
