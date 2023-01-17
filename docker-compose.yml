@@ -18,6 +18,7 @@ services:
       - DB_USER=someuser
       - DB_PASSWORD=somepw
       - ENV=cloud-env
+      - DEBUG=True
     depends_on:  # Ensures that the DB service starts, but does not ensure the application starts
       - db
   db:

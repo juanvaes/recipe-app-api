@@ -1,6 +1,8 @@
+from unittest import mock
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
+from core.models import recipe_image_file_path
 
 class TestUseModel(TestCase):
     """Test core models"""
@@ -42,3 +44,11 @@ class TestUseModel(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    @mock.patch('core.models.uuid.uuid4')
+    def test_recipe_file_name_uuid(self, mocked_uuid):
+        uuid = 'test-uuid'
+        mocked_uuid.return_value = uuid
+        file_path = recipe_image_file_path(None, 'example.jpg')
+
+        self.assertEqual(file_path, f"media/recipe/{uuid}.jpg")
